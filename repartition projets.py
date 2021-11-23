@@ -20,7 +20,7 @@ fa=[[3,4,18,19],[2,1,8,9,16]]
 
 binomes = [d,t,z,l,m,f,ma,b,p,lo,a,c,la,w,pe,h,fo,mi,fa]
 repartition=[i for i in range(19)]
-choix=[[]]
+choice=[[]]
 
 from random import *
 from math import *
@@ -30,32 +30,32 @@ def initialisation(popsize,dimension):
     p0=[]
     for k in range(popsize):
         i=[-1 for i in range(dimension)]
-        indices=[j for j in range(20)]
+        indexes=[j for j in range(20)]
         l=19
         for j in range(dimension):
             r=randrange(0,l)
-            e=indices.pop(r)
+            e=indexes.pop(r)
             l-=1
             i[e]=j+1
         p0.append(i)
     return p0
 
-def indice(liste,x):
+def index(liste,x):
     l=len(liste)
     for i in range(l):
         if x==liste[i]:
             return l-i
 
-def fonction(ind):
+def function_i(ind):
     l=len(ind)
     s=0
     for i in range(0,l):
-        sujet=ind[i]
-        binome=binomes[i]
-        if sujet in binome[0]:
+        subject=ind[i]
+        pair=pairs[i]
+        if subject in pair[0]:
             s+=150
-        elif sujet in binome[1]:
-            s-=(100+indice(binome[1],sujet))
+        elif subject in pair[1]:
+            s-=(100+index(pair[1],subject))
         else:
             s-=10
     return s
@@ -64,7 +64,7 @@ def evaluation(p):
     e=[]
     l=len(p)
     for i in range(l):
-        e.append(fonction(p[i]))
+        e.append(function_i(p[i]))
     return e
 
 def reproduction(p):
@@ -75,7 +75,7 @@ def reproduction(p):
         j=randrange(0,l)
     return p[i],p[j]
 
-def croisement(p1,p2,pc):
+def crossing_over(p1,p2,pc):
     p=random()
     if pc<p:
         return p1,p2
@@ -101,6 +101,7 @@ def mutation(e,pm):
     return e
 
 def selection(gen0,gen1,e0,e1,popsize):
+    #to sort people by evaluations
     tri0e=[e0[0]]
     tri0g=[gen0[0]]
     tri1e=[e1[1]]
@@ -140,14 +141,14 @@ def selection(gen0,gen1,e0,e1,popsize):
     
     
 
-def genetique(pm,pc,popsize,dimension,maxgen):
+def genetic(pm,pc,popsize,dimension,maxgen):
     gen0=initialisation(popsize,dimension)
     e0=evaluation(gen0)
     for iter in range(maxgen):
         gen1=[]#initialisation(popsize,dimension)
         for j in range(0,popsize,4):
             p1,p2=reproduction(gen0)
-            e1,e2=croisement(p1,p2,pc)
+            e1,e2=crossing_over(p1,p2,pc)
             e1=mutation(e1,pm)
             e2=mutation(e2,pm)
             e3,e4=reproduction(gen0)
@@ -168,5 +169,5 @@ pm=0.45
 pc=0
 popsize=20
 dimension=19
-maxgen=1000
-print(genetique(pm,pc,popsize,dimension,maxgen))
+maxgen=1000#0000
+print(genetic(pm,pc,popsize,dimension,maxgen))
